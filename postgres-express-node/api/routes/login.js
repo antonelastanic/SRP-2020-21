@@ -13,8 +13,8 @@ module.exports = (rootRouter) => {
 
   router.post(
     "/login",
-    SchemaValidator.validate("Login"),
-    LoginController.createLogin
+    SchemaValidator.validate("login"),
+    LoginController.login
   );
 
 

@@ -7,13 +7,6 @@ class LoginService {
     this.logger = logger;
   }
 
-  async getUser(userDTO) {
-    const user = await this.userModel.findOne({
-      where: userDTO,
-    });
-    return user;
-  }
-
   async login({username, password}) {
     const userRecord = await this.userModel.findOne({
       where: { username },
@@ -27,7 +20,7 @@ class LoginService {
     this.logger.info("Checking password...");
     
     if(userRecord.password === password) {      
-      this.logger.info("Password correct!");
+      this.logger.info("Password correct, proceed and generate JWT!");
       
       const user = {
         username: userRecord.username,
@@ -37,13 +30,12 @@ class LoginService {
       const payload = {
         ...user,
         aud: config.jwt.audience || "localhost/api",
-        iss:config.jwt.issuer || "localhost@fesb",
+        iss: config.jwt.issuer || "localhost@fesb",
       };
 
       const token = this.generateToken(payload);
    
       return { user, token };
-
     }
     
     this.logger.error("Invalid password");
@@ -56,7 +48,5 @@ class LoginService {
     });
   }
 }
-
-
 
 module.exports = LoginService;
